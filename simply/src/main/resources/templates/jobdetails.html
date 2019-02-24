@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Job details</title>
+<link rel="stylesheet" type="text/css" href="/css/main.css" />
+<script type="text/javascript">
+	function saveJob() {
+		document.getElementById("saveForm").submit();
+		return false;
+	}
+	function sendJob() {
+		document.getElementById("send").value = 'true';
+		document.getElementById("saveForm").submit();
+		return false;
+	}
+</script>
+</head>
+<body>
+
+	<ul class="navigation">
+		<li><a href="/">Home</a></li>
+		<li><a href="/jobs" class="active">Jobs</a></li>
+		<li><a href="/queue">Queue</a></li>
+		<li><a href="/actions">Actions</a></li>
+		<li><a href="/cron">Cron</a></li>
+	</ul>
+
+	<form id="saveForm" action="/jobs" method="post">
+		<input id="_method" type="hidden" name="_method" value="patch" /> <input
+			type="hidden" name="id" th:value="${job.id}" /> <input id="send"
+			type="hidden" name="send" value="false" />
+		<p>
+			Job id <span th:text="${job.id}"></span>
+		</p>
+
+		<p>
+			Action: <span th:text="${job.jc.actionType.className}"></span>
+		</p>
+
+		<table>
+			<tr>
+				<td>
+					<p>Name:</p> <textarea cols="60" rows="5" id="name" name="name"
+						th:value="${job.jc.name}" th:text="${job.jc.name}"></textarea>
+				</td>
+				<td>
+					<p>Description:</p> <textarea cols="60" rows="5" name="description"
+						th:value="${job.jc.description}" th:text="${job.jc.description}">job description</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>Tags:</p> <input type="text" size="60" name="tags"
+					th:value="${job.jc.tags}" />
+
+					<p>
+						Priority: <input type="text" size="10" name="priority"
+							th:value="${job.jc.priority}" />
+					</p>
+				</td>
+				<td>
+					<p>Parameters:</p> <textarea cols="60" rows="5" name="parameters"
+						th:value="${job.jc.parameters}" th:text="${job.jc.parameters}">job parameters</textarea>
+				</td>
+			</tr>
+		</table>
+		<p>Cron:</p>
+		<input type="text" size="10" name="cron" th:value="${job.jc.cron}" />
+	</form>
+	
+	<p></p>
+
+	<div class="action">
+		<a href="#" onClick="saveJob();">Save</a>
+		<div style="float: left; padding-left: 6pt">&nbsp;</div>
+		<a href="#" onClick="sendJob();">Save and send to the Queue</a>
+	</div>
+
+	<div style="visibility: hidden">
+		<form id="sendForm" action="/queue" method="post">
+			<input type="text" name="idlist" th:value="${job.id}" />
+		</form>
+	</div>
+</body>
+</html>

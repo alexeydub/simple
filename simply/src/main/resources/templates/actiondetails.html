@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Action details</title>
+<link rel="stylesheet" type="text/css" href="/css/main.css" />
+<script type="text/javascript">
+	function updateAction() {
+		var form = document.getElementById("updateForm");
+		form.submit();
+		return false;
+	}
+	function createJob() {
+		var form = document.getElementById("createjobForm");
+		document.getElementById("jobParameters").value = document
+				.getElementById("actionParameters").value;
+		form.submit();
+		return false;
+	}
+</script>
+</head>
+<body>
+
+	<ul class="navigation">
+		<li><a href="/">Home</a></li>
+		<li><a href="/jobs">Jobs</a></li>
+		<li><a href="/queue">Queue</a></li>
+		<li><a href="/actions" class="active">Actions</a></li>
+		<li><a href="/cron">Cron</a></li>
+	</ul>
+
+	<div class="error" th:if="${!#strings.isEmpty(error)}"
+		th:text="${error}">error</div>
+
+	<p>
+		Action <span th:text="${action.id}"></span>
+	</p>
+	<form id="updateForm" action="/actions/details" method="post">
+		<input id="_method" type="hidden" name="_method" value="patch" /> <input
+			type="hidden" name="actionId" th:value="${action.id}" />
+		<p>
+			Class name: <input type="text" disabled="disabled"
+				style="width: 100%" th:value="${action.className}" />
+		</p>
+		<p>Parameters</p>
+		<textarea id="actionParameters" rows="10" cols="80"
+			style="width: 100%" th:value="${action.paramDescription}"
+			th:text="${action.paramDescription}"></textarea>
+	</form>
+
+	<div class="action">
+		<a href="#" onClick="createJob();">create Job for this action</a> <span
+			style="float: left">&nbsp;</span> <a href="#"
+			onClick="updateAction();">update</a>
+	</div>
+
+	<div style="visibility: hidden">
+		<form id="createjobForm" action="/jobs" method="post">
+			<input type="text" name="actionId" th:value="${action.id}" /> <input
+				type="text" name="name"
+				th:value="${#strings.concat('job for action ', action.className)}" />
+			<input id="jobParameters" type="text" name="parameters"
+				th:value="${action.paramDescription}" />
+		</form>
+	</div>
+
+</body>
+</html>

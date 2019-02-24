@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Job management system</title>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<script type="text/javascript">
+	function startStop(s) {
+		document.getElementById("system").value = s;
+		document.getElementById("startStop").submit();
+		return false;
+	}
+</script>
+</head>
+<body>
+	<ul class="navigation">
+		<li><a class="active" href="/">Home</a></li>
+		<li><a href="/jobs">Jobs</a></li>
+		<li><a href="/queue">Queue</a></li>
+		<li><a href="/actions">Actions</a></li>
+		<li><a href="/cron">Cron</a></li>
+	</ul>
+
+	<table>
+		<tr>
+			<td>
+				<p>
+					Job executor is <span th:if="!${running}">not</span> running
+				</p>
+				<p>
+					<span th:text="${threads}">available_threads_count</span> threads
+					is available
+				</p>
+				<div class="action">
+					<a href="#" th:if="${running}" onClick="startStop('executor');">stop
+						executor</a> <a href="#" th:if="!${running}"
+						onClick="startStop('executor');">start executor</a>
+				</div>
+			</td>
+			<td>
+				<p>
+					Cron is <span th:if="!${cronrunning}">not</span> running
+				</p>
+				<p>&nbsp;
+				</p>
+				<div class="action"> <a href="#" th:if="${cronrunning}" onClick="startStop('cron');">stop
+					cron</a> <a href="#" th:if="!${cronrunning}"
+				onClick="startStop('cron');">start cron</a>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+
+	<div style="visibility: hidden">
+		<form id="startStop" action="/" method="post">
+			<input id="system" name="system" type="hidden" value="executor" />
+		</form>
+
+	</div>
+</body>
+</html>

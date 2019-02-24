@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cron</title>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/table.css" />
+</head>
+<body>
+	<ul class="navigation">
+		<li><a href="/">Home</a></li>
+		<li><a href="/jobs">Jobs</a></li>
+		<li><a href="/queue">Queue</a></li>
+		<li><a href="/actions">Actions</a></li>
+		<li><a class="active" href="/cron">Cron</a></li>
+	</ul>
+
+	<p>
+		Scheduler is <span th:if="!${started}">not</span> running
+	</p>
+
+	<form id="entitylist">
+		<table class="blueTable">
+			<tr>
+				<th></th>
+				<th>group</th>
+				<th>name</th>
+				<th>description</th>
+				<th>data</th>
+				<th>cron</th>
+			</tr>
+			<tr th:each="job : ${cronjobs}">
+				<td><input name="id" type="checkbox" th:value="${#strings.concat(job.jobName, '#', job.groupName)}" /></td>
+				<td th:text="${job.groupName}">group</td>
+				<td th:text="${job.jobName}">name</td>
+				<td th:text="${job.description}">description</td>
+				<td th:text="${job.dataMap}">data</td>
+				<td th:text="${job.cronExpression}">cron</td>
+			</tr>
+		</table>
+	</form>
+
+
+</body>
+</html>

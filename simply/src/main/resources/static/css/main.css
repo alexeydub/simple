@@ -1,0 +1,83 @@
+ul.navigation {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #163216;
+}
+
+ul.navigation li {
+	float: left;
+}
+
+ul.navigation li a {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+ul.navigation li a:hover:not (.active ) {
+	background-color: #244824;
+}
+
+a.active {
+	background-color: #326432;
+}
+
+div.action {
+	margin: 1pt 1pt 1pt 1pt;
+	overflow: hidden;
+}
+
+div.action a {
+	padding: 6pt 6pt;
+	display: float;
+	float: left;
+	background-color: #325656;
+	text-align: center;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+}
+
+div.action a:hover {
+	background-color: #485664;
+}
+
+.action {
+	font-family: Sans-serif;
+}
+
+div.error {
+	background-color: #803030;
+	color: white;
+	padding: 12pt 12pt;
+	margin: 12pt 12pt;
+}
+
+div.pagenav {
+	padding: 6pt 6pt;
+	text-align: center;
+	color: #325656;
+}
+
+span.action {
+	padding: 6pt 6pt;
+	text-align: center;
+	color: #325656;
+}
+
+span.action a {
+	padding: 6pt 6pt;
+	text-align: center;
+	color: #325656;
+	text-align: center;
+	text-decoration: none;
+}
+
+form {
+	border: 0px solid black;
+	background-color: #EEEEEE;
+}

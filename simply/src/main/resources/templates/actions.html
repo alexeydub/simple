@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Actions</title>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/table.css" />
+<script type="text/javascript">
+	function editAction(actionid) {
+		alert("here: " + actionId);
+	}
+	function createAction() {
+		var createForm = document.getElementById("createForm");
+		createForm.submit();
+	}
+</script>
+</head>
+<body>
+	<ul class="navigation">
+		<li><a href="/">Home</a></li>
+		<li><a href="/jobs">Jobs</a></li>
+		<li><a href="/queue">Queue</a></li>
+		<li><a class="active" href="#">Actions</a></li>
+		<li><a href="/cron">Cron</a></li>
+	</ul>
+
+	<div class="error" th:if="${!#strings.isEmpty(error)}"
+		th:text="${error}">error</div>
+
+
+	<table class="blueTable">
+		<tr>
+			<th>action class name</th>
+			<th>parameter description</th>
+		</tr>
+		<tr th:each="action : ${actions}">
+			<td><a th:href="@{/actions/details(id=${action.id})}"
+				th:text="${action.className}">action class name</a></td>
+			<td th:text="${action.paramDescription}">action param
+				description</td>
+		</tr>
+	</table>
+
+	<p></p>
+	<form id="createForm" action="/actions" method="post">
+		<fieldset>
+			<p>
+				Action class: <input required type="text" name="className" />*
+			</p>
+			<p style="vertical-align: top">Description:</p>
+			<textarea name="desc" rows="10" cols="80" class="width: 100%"></textarea>
+			<div class="action">
+				<a href="#" onClick="createAction()">create</a>
+			</div>
+
+		</fieldset>
+
+	</form>
+</body>
+</html>

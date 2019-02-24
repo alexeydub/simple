@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Jobs</title>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/table.css" />
+<script type="text/javascript" src="/js/entitylist.js"></script>
+<script type="text/javascript">
+	function setDefaultButtons() {
+		var input = document.getElementById("nameFilter");
+		input.addEventListener("keyup", filterAction);
+		input = document.getElementById("descriptionFilter");
+		input.addEventListener("keyup", filterAction);
+	}
+
+	function filterAction(event) {
+		if (event.keyCode === 13) {
+			event.preventDefault();
+			document.getElementById("filterAction").click();
+		}
+	}
+
+	function deleteJobs() {
+		var idlist = "";
+		var jobslist = document.getElementById("entitylist");
+		var c = jobslist.getElementsByTagName("input");
+		for (var i = 0; i < c.length; i++) {
+			if (c[i].type == "checkbox" && c[i].name == "id") {
+				if (c[i].checked) {
+					if (idlist == '') {
+						idlist = c[i].value;
+					} else {
+						idlist = idlist + "," + c[i].value;
+					}
+				}
+			}
+		}
+		var form = document.getElementById("deletejob");
+		document.getElementById("idlist_delete").value = idlist;
+		form.submit();
+		return false;
+	}
+
+	function recheckAll() {
+		var idlist = "";
+		var jobslist = document.getElementById("entitylist");
+		var c = jobslist.getElementsByTagName("input");
+		for (var i = 0; i < c.length; i++) {
+			if (c[i].type == "checkbox" && c[i].name == "id") {
+				(c[i].checked = !c[i].checked);
+			}
+		}
+		return false;
+	}
+
+	function moveJobs() {
+		var idlist = "";
+		var jobslist = document.getElementById("entitylist");
+		var c = jobslist.getElementsByTagName("input");
+		for (var i = 0; i < c.length; i++) {
+			if (c[i].type == "checkbox" && c[i].name == "id") {
+				if (c[i].checked) {
+					if (idlist == '') {
+						idlist = c[i].value;
+					} else {
+						idlist = idlist + "," + c[i].value;
+					}
+				}
+			}
+		}
+		var form = document.getElementById("movejob");
+		document.getElementById("idlist_move").value = idlist;
+		form.submit();
+		return false;
+	}
+</script>
+
+</head>
+<body>
+
+	<ul class="navigation">
+		<li><a href="/">Home</a></li>
+		<li><a class="active" href="#">Jobs</a></li>
+		<li><a href="/queue">Queue</a></li>
+		<li><a href="/actions">Actions</a></li>
+		<li><a href="/cron">Cron</a></li>
+	</ul>
+
+	<div class="action">
+		<a href="#" onClick="moveJobs();">Move job(s) to the queue</a> <a
+			href="#" style="float: right" onClick="deleteJobs();">Delete</a>
+	</div>
+
+	<div class="error" th:if="${!#strings.isEmpty(error)}"
+		th:text="${error}">error</div>
+
+	<form id="entitylist">
+		<table class="blueTable">
+			<tr>
+				<th></th>
+				<th>name</th>
+				<th>tags</th>
+				<th>description</th>
+				<th>priority</th>
+				<th>cron</th>
+			</tr>
+			<tr>
+				<td><a href="#" onClick="recheckAll()">all</a></td>
+				<td><input type="text" name="nameFilter" th:value="${name}" /></td>
+				<td><input type="text" name="tagsFilter" th:value="${tags}" /></td>
+				<td><input type="text" name="descriptionFilter"
+					th:value="${description}" /></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr th:each="job : ${jobs}">
+				<td><input name="id" type="checkbox" th:value="${job.id}" /></td>
+				<td><a th:href="@{/jobs/details(id=${job.id})}"> <span
+						th:if="${#strings.isEmpty(job.jc.name)}"
+						th:text="${#strings.concat(job.id, ' unnamed job')}"></span> <span
+						th:text="${#strings.concat(job.id, ' ', job.jc.name)}">name</span>
+				</a></td>
+				<td th:text="${job.jc.tags}">tags</td>
+				<td th:text="${job.jc.description}">description</td>
+				<td th:text="${job.jc.priority}">priority</td>
+				<td th:text="${job.jc.cron}">cron</td>
+			</tr>
+		</table>
+	</form>
+
+	<div class="action" style="float: right">
+		<a id="filterAction" href="#" onClick="filter();">Filter</a>
+	</div>
+
+	<div class="pagenav">
+		<span th:if="${page}!=null"> <span class="action"
+			th:if="${page}!=0"><a href="#" onClick="previousPage();">previous
+					&lt;</a></span> <span th:text="'page: ' + ${page}">page</span>
+		</span> <span class="action"><a href="#" onClick="nextPage();">&gt;
+				next</a></span>
+	</div>
+
+	<div style="visibility: hidden">
+		<form id="listhidden" action="/jobs" method="get">
+			<input id="page" type="text" name="page" th:value="${page}" /> <input
+				id="pageSize" type="text" name="pageSize" th:value="${pageSize}" />
+			<input id="nameFilter" type="text" name="name" /> <input
+				id="tagsFilter" type="text" name="tags" /> <input
+				id="descriptionFilter" type="text" name="description" />
+		</form>
+
+		<form id="jobshidden" action="/jobs" method="get">
+			<input id="page" type="text" name="page" /> <input id="pageSize"
+				type="text" name="pageSize" /> <input id="fName" type="text"
+				name="name" /> <input id="fDescription" type="text" name="desc" />
+		</form>
+		<form id="deletejob" action="/jobs" method="post">
+			<input id="idlist_delete" type="text" name="idlist" /> <input
+				id="_method" type="hidden" name="_method" value="delete" />
+		</form>
+		<form id="movejob" action="/queue" method="post">
+			<input id="idlist_move" type="text" name="idlist" />
+		</form>
+
+	</div>
+
+
+</body>
+</html>
